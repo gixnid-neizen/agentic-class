@@ -76,12 +76,26 @@ describe("пустые задачи", () => {
         const ids = visibleTasks(seedTasks, "done").map((task) => task.id)
         expect(ids).toEqual([2])
     })
+
+    it("ни одна вкладка не показывает задачу из U+200B", () => {
+        const tasks = [
+            { id: 1, title: "\u200B", done: false },
+            { id: 2, title: "\u200B", done: true },
+        ]
+        expect(visibleTasks(tasks, "all")).toEqual([])
+        expect(visibleTasks(tasks, "open")).toEqual([])
+        expect(visibleTasks(tasks, "done")).toEqual([])
+    })
 })
 
 
 describe("счётчик", () => {
     it("считает только задачи с видимым названием", () => {
         expect(openCount(seedTasks)).toBe(1)
+    })
+    it("счётчик не считает задачу из U+200B", () => {
+        const tasks = [{ id: 1, title: "\u200B", done: false }]
+        expect(openCount(tasks)).toBe(0)
     })
 })
 
@@ -93,7 +107,7 @@ describe("создание задачи", () => {
     it("создание обрезает пробелы по краям", () => {
         expect(createTask(9, "  Хлеб  ")?.title).toBe("Хлеб")
     })
-    
+
     it("создание из U+200B не создаёт задачу", () => {
         expect(createTask(9, "\u200B")).toBeUndefined()
     })
