@@ -33,13 +33,16 @@ export function createTask(id: number, title: string): Task | undefined {
 
 /** Переименование существующей задачи. Проверки здесь нет — issue #7. */
 export function renameTask(tasks: Task[], id: number, title: string): Task[] {
-    return tasks.map((task) => (task.id === id ? { ...task, title } : task))
+    const trimmed = title.trim()
+    if (trimmed.length === 0) return tasks
+    return tasks.map((task) => (task.id === id ? { ...task, title: trimmed } : task))
 }
 
 export function visibleTasks(tasks: Task[], filter: Filter): Task[] {
-    if (filter === "open") return tasks.filter((task) => !task.done)
-    if (filter === "done") return tasks.filter((task) => task.done)
-    return tasks
+    const withVisibleTitle = tasks.filter((task) => !isBlankTitle(task.title))
+    if (filter === "open") return withVisibleTitle.filter((task) => !task.done)
+    if (filter === "done") return withVisibleTitle.filter((task) => task.done)
+    return withVisibleTitle
 }
 
 /**
@@ -48,5 +51,5 @@ export function visibleTasks(tasks: Task[], filter: Filter): Task[] {
  * и одна пустая строка.
  */
 export function openCount(tasks: Task[]): number {
-    return tasks.filter((task) => !task.done).length
+    return tasks.filter((task) => !task.done && !isBlankTitle(task.title)).length
 }
