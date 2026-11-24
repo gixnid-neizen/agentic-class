@@ -278,3 +278,131 @@ AssertionError: expected [ 1, 3 ] to deeply equal [ 1 ]
    Start at  14:40:48
    Duration  242ms (transform 46%, import 23%, tests 22%, worker 9%)
 
+--- (г) ---
+
+> test
+> vitest run
+
+
+ RUN  v5.0.5 /home/default/projects/hwsids/agentic-class/homework/start
+
+ ❯ src/tasks.test.ts (17 tests | 4 failed) 19ms
+   ✓ базовая доска (2)
+     ✓ создаёт задачу и обрезает название 2ms
+     ✓ фильтрует готовые задачи 2ms
+   ❯ переименование задач (6)
+     ✓ переименование в пробелы отклоняется 0ms
+     ✓ переименование в табуляцию отклоняется 1ms
+     ✓ переименование в неразрывный пробел отклоняется 0ms
+     ✓ переименование с пробелами обрезается 0ms
+     ✓ переименование на пустую строку отклоняется 0ms
+     × переименование в нулевой пробел U+200B отклоняется 5ms
+   ❯ пустые задачи (4)
+     ✓ вкладка «Все» не показывает пустую задачу 1ms
+     ✓ вкладка «Открытые» не показывает пустую задачу 0ms
+     ✓ вкладка «Готовые» не показывает пустую задачу 0ms
+     × ни одна вкладка не показывает задачу из U+200B 3ms
+   ❯ счётчик (2)
+     ✓ считает только задачи с видимым названием 0ms
+     × счётчик не считает задачу из U+200B 1ms
+   ❯ создание задачи (3)
+     ✓ пустое название не создаёт задачу 0ms
+     ✓ создание обрезает пробелы по краям 0ms
+     × создание из U+200B не создаёт задачу 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/tasks.test.ts > переименование задач > переименование в нулевой пробел U+200B отклоняется
+AssertionError: expected '​' to be 'Сдать лабораторную' // Object.is equality
+
+Expected: "Сдать лабораторную"
+Received: "​"
+
+ ❯ src/tasks.test.ts:61:25
+     59|         const result = renameTask(seedTasks, 1, "\u200B")
+     60|         const newName = result.find((task) => task.id === 1)?.title
+     61|         expect(newName).toBe(oldName)
+       |                         ^
+     62|     })
+     63| })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/tasks.test.ts > пустые задачи > ни одна вкладка не показывает задачу из U+200B
+AssertionError: expected [ …(2) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "done": false,
++     "id": 1,
++     "title": "​",
++   },
++   {
++     "done": true,
++     "id": 2,
++     "title": "​",
++   },
++ ]
+
+ ❯ src/tasks.test.ts:85:44
+     83|             { id: 2, title: "\u200B", done: true },
+     84|         ]
+     85|         expect(visibleTasks(tasks, "all")).toEqual([])
+       |                                            ^
+     86|         expect(visibleTasks(tasks, "open")).toEqual([])
+     87|         expect(visibleTasks(tasks, "done")).toEqual([])
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/tasks.test.ts > счётчик > счётчик не считает задачу из U+200B
+AssertionError: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ src/tasks.test.ts:98:34
+     96|     it("счётчик не считает задачу из U+200B", () => {
+     97|         const tasks = [{ id: 1, title: "\u200B", done: false }]
+     98|         expect(openCount(tasks)).toBe(0)
+       |                                  ^
+     99|     })
+    100| })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/tasks.test.ts > создание задачи > создание из U+200B не создаёт задачу
+AssertionError: expected { id: 9, title: '​', done: false } to be undefined
+
+- Expected:
+undefined
+
++ Received:
+{
+  "done": false,
+  "id": 9,
+  "title": "​",
+}
+
+ ❯ src/tasks.test.ts:112:41
+    110|
+    111|     it("создание из U+200B не создаёт задачу", () => {
+    112|         expect(createTask(9, "\u200B")).toBeUndefined()
+       |                                         ^
+    113|     })
+    114| })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 13 passed (17)
+   Start at  16:38:00
+   Duration  224ms (tests 41%, import 30%, transform 20%, worker 9%)
+
