@@ -53,6 +53,13 @@ describe("переименование задач", () => {
         const newName = result.find((task) => task.id === 1)?.title
         expect(newName).toBe(oldName)
     })
+
+    it("переименование в нулевой пробел U+200B отклоняется", () => {
+        const oldName = seedTasks.find((task) => task.id === 1)?.title
+        const result = renameTask(seedTasks, 1, "\u200B")
+        const newName = result.find((task) => task.id === 1)?.title
+        expect(newName).toBe(oldName)
+    })
 })
 
 
@@ -85,5 +92,9 @@ describe("создание задачи", () => {
 
     it("создание обрезает пробелы по краям", () => {
         expect(createTask(9, "  Хлеб  ")?.title).toBe("Хлеб")
+    })
+    
+    it("создание из U+200B не создаёт задачу", () => {
+        expect(createTask(9, "\u200B")).toBeUndefined()
     })
 })
