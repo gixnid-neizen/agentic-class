@@ -1,6 +1,6 @@
 
 import { describe, expect, it } from "vitest"
-import { createTask, visibleTasks, seedTasks, renameTask, openCount } from "./tasks"
+import { createTask, visibleTasks, seedTasks, renameTask, openCount, isBlankTitle } from "./tasks"
 
 
 // Два теста, с которыми поставляется стартер. Они проходят и не покрывают
@@ -110,5 +110,32 @@ describe("создание задачи", () => {
 
     it("создание из U+200B не создаёт задачу", () => {
         expect(createTask(9, "\u200B")).toBeUndefined()
+    })
+})
+
+
+describe("isBlankTitle", () => {
+    it("пробелы считаются пустыми", () => {
+        expect(isBlankTitle("   ")).toBe(true)
+    })
+
+    it("табуляция считается пустой", () => {
+        expect(isBlankTitle("\t")).toBe(true)
+    })
+
+    it("неразрывный пробел считается пустым", () => {
+        expect(isBlankTitle("\u00A0")).toBe(true)
+    })
+
+    it("один U+200B считается пустым", () => {
+        expect(isBlankTitle("\u200B")).toBe(true)
+    })
+
+    it("несколько U+200B подряд считаются пустыми", () => {
+        expect(isBlankTitle("\u200B\u200B")).toBe(true)
+    })
+
+    it("пробел вместе с U+200B считается пустым", () => {
+        expect(isBlankTitle(" \u200B ")).toBe(true)
     })
 })

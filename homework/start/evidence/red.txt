@@ -406,3 +406,156 @@ undefined
    Start at  16:38:00
    Duration  224ms (tests 41%, import 30%, transform 20%, worker 9%)
 
+--- (д) правило REPORT ---
+
+> test
+> vitest run
+
+
+ RUN  v5.0.5 /home/default/projects/hwsids/agentic-class/homework/start
+
+ ❯ src/tasks.test.ts (23 tests | 5 failed) 19ms
+   ✓ базовая доска (2)
+     ✓ создаёт задачу и обрезает название 2ms
+     ✓ фильтрует готовые задачи 1ms
+   ✓ переименование задач (6)
+     ✓ переименование в пробелы отклоняется 0ms
+     ✓ переименование в табуляцию отклоняется 0ms
+     ✓ переименование в неразрывный пробел отклоняется 0ms
+     ✓ переименование с пробелами обрезается 0ms
+     ✓ переименование на пустую строку отклоняется 0ms
+     ✓ переименование в нулевой пробел U+200B отклоняется 0ms
+   ❯ пустые задачи (4)
+     ✓ вкладка «Все» не показывает пустую задачу 1ms
+     ✓ вкладка «Открытые» не показывает пустую задачу 0ms
+     ✓ вкладка «Готовые» не показывает пустую задачу 0ms
+     × ни одна вкладка не показывает задачу из U+200B 7ms
+   ❯ счётчик (2)
+     ✓ считает только задачи с видимым названием 0ms
+     × счётчик не считает задачу из U+200B 1ms
+   ✓ создание задачи (3)
+     ✓ пустое название не создаёт задачу 0ms
+     ✓ создание обрезает пробелы по краям 0ms
+     ✓ создание из U+200B не создаёт задачу 0ms
+   ❯ isBlankTitle (6)
+     ✓ пробелы считаются пустыми 0ms
+     ✓ табуляция считается пустой 0ms
+     ✓ неразрывный пробел считается пустым 0ms
+     × один U+200B считается пустым 0ms
+     × несколько U+200B подряд считаются пустыми 1ms
+     × пробел вместе с U+200B считается пустым 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/tasks.test.ts > пустые задачи > ни одна вкладка не показывает задачу из U+200B
+AssertionError: expected [ …(2) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "done": false,
++     "id": 1,
++     "title": "​",
++   },
++   {
++     "done": true,
++     "id": 2,
++     "title": "​",
++   },
++ ]
+
+ ❯ src/tasks.test.ts:85:44
+     83|             { id: 2, title: "\u200B", done: true },
+     84|         ]
+     85|         expect(visibleTasks(tasks, "all")).toEqual([])
+       |                                            ^
+     86|         expect(visibleTasks(tasks, "open")).toEqual([])
+     87|         expect(visibleTasks(tasks, "done")).toEqual([])
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  src/tasks.test.ts > счётчик > счётчик не считает задачу из U+200B
+AssertionError: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ src/tasks.test.ts:98:34
+     96|     it("счётчик не считает задачу из U+200B", () => {
+     97|         const tasks = [{ id: 1, title: "\u200B", done: false }]
+     98|         expect(openCount(tasks)).toBe(0)
+       |                                  ^
+     99|     })
+    100| })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  src/tasks.test.ts > isBlankTitle > один U+200B считается пустым
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/tasks.test.ts:131:40
+    129|
+    130|     it("один U+200B считается пустым", () => {
+    131|         expect(isBlankTitle("\u200B")).toBe(true)
+       |                                        ^
+    132|     })
+    133|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  src/tasks.test.ts > isBlankTitle > несколько U+200B подряд считаются пустыми
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/tasks.test.ts:135:46
+    133|
+    134|     it("несколько U+200B подряд считаются пустыми", () => {
+    135|         expect(isBlankTitle("\u200B\u200B")).toBe(true)
+       |                                              ^
+    136|     })
+    137|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  src/tasks.test.ts > isBlankTitle > пробел вместе с U+200B считается пустым
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/tasks.test.ts:139:42
+    137|
+    138|     it("пробел вместе с U+200B считается пустым", () => {
+    139|         expect(isBlankTitle(" \u200B ")).toBe(true)
+       |                                          ^
+    140|     })
+    141| })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed | 18 passed (23)
+   Start at  03:56:56
+   Duration  221ms (tests 39%, import 30%, transform 20%, worker 11%)
+
